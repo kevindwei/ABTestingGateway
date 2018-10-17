@@ -1,6 +1,7 @@
-#killall nginx
+#!/bin/bash
 
-rm *temp -rf
+
+
 
 nginx-start="/software/ngx_openresty/nginx/sbin/nginx"
 $(nginx-start) -p `pwd` -c conf/nginx.conf  
