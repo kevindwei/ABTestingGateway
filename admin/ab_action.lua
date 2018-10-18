@@ -84,7 +84,7 @@ ngx.say("args:",args)
 if args then
     local action = args.action
     local do_action = ab_action[action]
-    --调试1
+    --调试2
     ngx.say("do_action:",do_action)
     if do_action then
         do_action({['db']=red})
