@@ -64,8 +64,9 @@ local do_action_error = function(action)
     return
 end
 
+local mes  = {"test":6}
+ngx.say(mes)
 
-ngx.say("{tt:test99999}")
 local red = redisModule:new(redisConf)
 local ok, err = red:connectdb()
 if not ok then
