@@ -191,7 +191,7 @@ _M.set = function(option)
 
     local status = _M.checkPolicy(option)
     --我的调试0
-    ngx.say(status)
+    --ngx.say(status)
     
     if not status then return end
 
@@ -199,7 +199,7 @@ _M.set = function(option)
 
     local policyGroup = getPolicyGroup()--获取上传的policyGroup
     --我的调试1
-    ngx.say(policyGroup)
+    --ngx.say(policyGroup)
     if not policyGroup then
         return false
     end
