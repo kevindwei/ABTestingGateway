@@ -14,11 +14,12 @@ local separator = ':'
 ---
 -- policyIO new function
 -- @param database opened redis.
--- @param baseLibrary a library(prefix of redis key) of policies.
+-- @param  groupLibrary前缀
+-- @param baseLibrary   前缀 a library(prefix of redis key) of policies.
 -- @return runtimeInfoIO object
 _M.new = function(self, database, groupLibrary, baseLibrary)
     if not database then
-        error{ERRORINFO.PARAMETER_NONE, 'need avaliable redis db'}
+        error{ERRORINFO.PARAMETER_NONE, 'need avaliable redis db'}  
     end
     if not baseLibrary then
         error{ERRORINFO.PARAMETER_NONE, 'need avaliable policy baselib'}
@@ -27,9 +28,9 @@ _M.new = function(self, database, groupLibrary, baseLibrary)
     self.database     = database
     self.groupLibrary = groupLibrary
     self.baseLibrary  = baseLibrary
-    self.idCountKey = table.concat({groupLibrary, fields.idCount}, separator)
+    self.idCountKey = table.concat({groupLibrary, fields.idCount}, separator) --连接ab:policygroups：idCount这两个字段
 
-    local ok, err = database:exists(self.idCountKey)
+    local ok, err = database:exists(self.idCountKey)--判断这字典是否存在
     if not ok then error{ERRORINFO.REDIS_ERROR,  err} end
 
     if 0 == ok then
@@ -83,28 +84,30 @@ _M.set = function(self, policyGroup)
     local baseLibrary = self.baseLibrary
     local policyMod = policyModule:new(database, baseLibrary)
 
-    local steps = #policyGroup
+    local steps = #policyGroup --policyGroup最大值
     local group = {}
     for idx = 1, steps do
-        local policy = policyGroup[idx]
-        local id = policyMod:set(policy)
+        local policy = policyGroup[idx] --具体的一个policy
+        local id = policyMod:set(policy)--设置好redis 返回policy对应id
         group[idx] = id
     end
-
+    --我的调试1
+    ngx.say(group)
+    
     local groupLibrary  = self.groupLibrary
     local groupid       = self:getIdCount()
-    local groupKey      = table.concat({groupLibrary, groupid}, separator)
-    database:init_pipeline()
+    local groupKey      = table.concat({groupLibrary, groupid}, separator) --ab:policygroups:1
+    database:init_pipeline() --批量插入
     for idx = 1, steps do
-        database:rpush(groupKey, group[idx])
+        database:rpush(groupKey, group[idx])--ab:policygroups:1: 2   第一组第二条policy
     end
-    local ok, err = database:commit_pipeline()
+    local ok, err = database:commit_pipeline()--批量插入
     if not ok then error{ERRORINFO.REDIS_ERROR, err} end
-
+    
     local ret = {}
     ret.groupid = groupid
     ret.group = group
-
+   
     return ret
 end
 

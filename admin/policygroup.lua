@@ -194,7 +194,7 @@ _M.set = function(option)
 
     local db = option.db
 
-    local policyGroup = getPolicyGroup()
+    local policyGroup = getPolicyGroup()--获取上传的policyGroup
     if not policyGroup then
         return false
     end
@@ -202,7 +202,7 @@ _M.set = function(option)
     local pfunc = function()
         local policyGroupMod = policyGroupModule:new(db.redis,
                                         policyGroupLib, policyLib)
-        return policyGroupMod:set(policyGroup)
+        return policyGroupMod:set(policyGroup) --设置policyGroup上传的内容到 redis
     end
     local status, info = xpcall(pfunc, handler)
     if not status then

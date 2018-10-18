@@ -13,7 +13,7 @@ local separator = ':'
 ---
 -- policyIO new function
 -- @param database opened redis.
--- @param baseLibrary a library(prefix of redis key) of policies.
+-- @param baseLibrary 前缀a library(prefix of redis key) of policies.
 -- @return runtimeInfoIO object
 _M.new = function(self, database, baseLibrary)
     if not database then
@@ -25,7 +25,7 @@ _M.new = function(self, database, baseLibrary)
     
     self.database     = database
     self.baseLibrary  = baseLibrary
-    self.idCountKey = table.concat({baseLibrary, fields.idCount}, separator)
+    self.idCountKey = table.concat({baseLibrary, fields.idCount}, separator) --连接ab:policies：idCount这两个字段
     
     local ok, err = database:exists(self.idCountKey)
     if not ok then error{ERRORINFO.REDIS_ERROR,  err} end
@@ -38,12 +38,12 @@ _M.new = function(self, database, baseLibrary)
 end
 
 ---
--- get id for current policy
+-- get id for current policy 从redis获取id
 -- @return the id
 _M.getIdCount = function(self)
     local database = self.database
     local key = self.idCountKey
-    local idCount, err = database:incr(key)
+    local idCount, err = database:incr(key) --将 key 中储存的数字值增一，不存在，那么key的值会先被初始化为 0
     if not idCount then error{ERRORINFO.REDIS_ERROR, err} end
     
     return idCount
@@ -77,12 +77,12 @@ end
 
 ---
 -- addtion a policy to specified redis lib
--- @param policy policy of addtion
+-- @param policy policy of addtion  具体的一个policy
 -- @return allways returned SUCCESS
 _M.set = function(self, policy)
-    local id = self:getIdCount()
+    local id = self:getIdCount()--得到key对应的id
     local database = self.database
-    local divModulename = table.concat({'abtesting', 'diversion', policy.divtype}, '.')
+    local divModulename = table.concat({'abtesting', 'diversion', policy.divtype}, '.')  -- abtesting.diversion.uidsuffix  iprange等
     
     self:_setDivtype(id, policy.divtype)
     self:_setDivdata(id, policy.divdata, divModulename)
