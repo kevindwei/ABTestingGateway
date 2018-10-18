@@ -80,7 +80,7 @@ end
 
 local args = ngx.req.get_uri_args()
 --调试1
-ngx.say("args:",args)
+--ngx.say("args:",args)
 if args then
     local action = args.action
     local do_action = ab_action[action]
