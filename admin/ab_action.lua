@@ -76,8 +76,7 @@ if not ok then
     ngx.say(response)
     return
 end
---调试0
-ngx.say("redis,ok:",ok)
+
 
 local args = ngx.req.get_uri_args()
 if args then
