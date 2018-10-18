@@ -64,11 +64,11 @@ local do_action_error = function(action)
     return
 end
 
-local mes  = "test"
-ngx.say(mes)
+
 
 local red = redisModule:new(redisConf)
 local ok, err = red:connectdb()
+
 if not ok then
     local info = ERRORINFO.REDIS_CONNECT_ERROR
     local response = doresp(info, err)
@@ -76,11 +76,15 @@ if not ok then
     ngx.say(response)
     return
 end
+#调试0
+ngx.say("redis,ok:",ok)
 
 local args = ngx.req.get_uri_args()
 if args then
     local action = args.action
     local do_action = ab_action[action]
+    #调试1
+    ngx.say("do_action:",do_action)
     if do_action then
         do_action({['db']=red})
 --        local ok, info = do_action(policy, {['db']=red})
