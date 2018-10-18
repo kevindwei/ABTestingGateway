@@ -64,7 +64,7 @@ local do_action_error = function(action)
     return
 end
 
-local mes  = {"test":6}
+local mes  = "test"
 ngx.say(mes)
 
 local red = redisModule:new(redisConf)
