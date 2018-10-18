@@ -91,8 +91,8 @@ _M.set = function(self, policyGroup)
         local id = policyMod:set(policy)--设置好redis 返回policy对应id
         group[idx] = id
     end
-    --我的调试1
-    ngx.say(group)
+    --我的调试2
+    --ngx.say(group)
     
     local groupLibrary  = self.groupLibrary
     local groupid       = self:getIdCount()
