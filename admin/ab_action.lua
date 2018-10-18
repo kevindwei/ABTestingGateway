@@ -76,14 +76,14 @@ if not ok then
     ngx.say(response)
     return
 end
-#调试0
+--调试0
 ngx.say("redis,ok:",ok)
 
 local args = ngx.req.get_uri_args()
 if args then
     local action = args.action
     local do_action = ab_action[action]
-    #调试1
+    --调试1
     ngx.say("do_action:",do_action)
     if do_action then
         do_action({['db']=red})
